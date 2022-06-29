@@ -1,7 +1,7 @@
-const profiles = require('express').Router()
+const profiles = require('express').Router();
 
-const profilesControll = require('../controllers/profiles')
+const profilesControll = require('../controllers/profiles');
 
-profiles.get('/', profilesControll.getAllProfiles)
+profiles.get('/', profilesControll.getAllProfiles);
 
-module.exports = profiles
+module.exports = profiles;

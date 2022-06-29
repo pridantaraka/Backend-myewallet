@@ -1,6 +1,9 @@
+const response = require('../helpers/standartResponse');
+
+const userModels = require('../models/users');
+
 exports.getAllUsers = (req, res)=>{
-    return res.json({
-        success: true,
-        message: 'List all users'
-    })
-}
+    userModels.getAllUsers((results)=>{
+        return response(res, 'Massage from standard response', results);
+    });
+};
