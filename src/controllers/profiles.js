@@ -1,6 +1,9 @@
+const response = require('../helpers/standartResponse');
+
+const profileModels = require('../models/profiles');
+
 exports.getAllProfiles = (req, res)=>{
-    return res.json({
-        success: true,
-        message: 'List all profiles'
+    profileModels.getAllProfiles((results)=>{
+        return response(res, 'Massage from standard response', results);
     });
 };
