@@ -7,3 +7,9 @@ exports.getAllUsers = (req, res)=>{
         return response(res, 'Massage from standard response', results);
     });
 };
+
+exports.createUsers = (req, res) =>{
+    userModels.createUsers(req.budy, (results)=>{
+        return response(res, 'Create User successfully', results);
+    });
+};
