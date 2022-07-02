@@ -4,7 +4,6 @@ const { body } = require('express-validator');
 
 const createUserValidator = [
     body('email')
-        // .isEmpty().withMessage('Email cannot be empty')
         .isEmail().withMessage('Email Format invalid'),
     body('username')
         .isLength({ min: 5 }).withMessage('Username length minimal 5 character')
