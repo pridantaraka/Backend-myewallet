@@ -5,11 +5,11 @@ const bcrypt = require('bcrypt');
 
 
 //start user
-const createUserValidator = [
+const UserValidator = [
     body('email')
         .isEmail().withMessage('Email Format invalid'),
     body('username')
-        .isLength({ min: 4 }).withMessage('Username length minimal 5 character'),
+        .isLength({ min: 4 }).withMessage('Username length minimal 4 character'),
     body('password')
         .isLength({ min: 8 }).withMessage('Username length minimal 8 character')
         .customSanitizer(async (val) =>{
@@ -17,37 +17,37 @@ const createUserValidator = [
             return hash;
         }),
     body('pin')
-        .isLength({ min: 6 }).withMessage('PIN must be 6 number')
+        .isLength({ min: 6 }).isNumeric().withMessage('PIN must be 6 number')
         // .isAlphanumeric().withMessage('Pin must all number')
         // .customSanitizer(async (val) =>{
         //     const hash = await bcrypt.hash(val, 10);
         //     return hash;
         // })
-    ,
     
 ];
 //end
 
 //start user page n limit
-const userLimit = [
-    body('limit').toInt(), 
-    body('page').toInt()
-];
+// const userLimit = [
+//     body('limit').toInt(), 
+//     body('page').toInt()
+// ];
 //end
 
-const updateUserValidator = [
-    body('email')
-        .isEmail().withMessage('Email Format invalid'),
-    body('username')
-        .isLength({ min: 5 }).withMessage('Username length minimal 5 character')
-];
+//start Update uservalidator
+// const updateUserValidator = [
+//     body('email')
+//         .isEmail().withMessage('Email Format invalid'),
+//     body('username')
+//         .isLength({ min: 4 }).withMessage('Username length minimal 4 character')
+// ];
+//end
 
 
-
-users.get('/', ...userLimit, userController.getAllUsers);
+users.get('/', body('limit').toInt(), body('page').toInt(), userController.getAllUsers);
 users.get('/:id', userController.getUserbyId);
-users.post('/', ...createUserValidator,userController.createUsers);
-users.patch('/:id', ...updateUserValidator, userController.updateUsers);
+users.post('/', ...UserValidator,userController.createUsers);
+users.patch('/:id', ...UserValidator, userController.updateUsers);
 users.delete('/:id', userController.deleteUsers);
 
 module.exports = users;

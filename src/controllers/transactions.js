@@ -17,17 +17,33 @@ exports.getAllTransactions = (req, res)=>{
     });
 };
 
-//start create user
-exports.createUsers = (req, res) =>{
+//start create Transactions
+exports.createTransactions = (req, res) =>{
     const validation = validationResult(req);
     if(!validation.isEmpty()){
         return response(res, 'Error occured', validation.array(), 400);
     }
-    transactionsModels.createProfiles(req.body, (err, results)=>{
+    transactionsModels.createTransactions(req.body, (err, results)=>{
         if(err){  
             return errorResponse(err,res);
         }
-        return response(res, 'Create Transaction successfully', results[0]);    
+        return response(res, 'Create Transaction successfully', results.rows);    
+    });
+};
+//end
+
+//start updateTransactions
+exports.updateTransactions = (req, res) =>{
+    const {id} = req.params;
+    const validation = validationResult(req);
+    if(!validation.isEmpty()){
+        return response(res, 'Error occured', validation.array(), null, 400);
+    }
+    transactionsModels.updateTransactions(id, req.body, (err, results)=>{
+        if(err){
+            return errorResponse(err,res);
+        }
+        return response(res, 'UPDATE data success!', results.rows);
     });
 };
 //end
@@ -35,7 +51,7 @@ exports.createUsers = (req, res) =>{
 //start delete transactions
 exports.deleteTransactions = (req, res) =>{
     const {id} = req.params;
-    transactionsModels.deleteUsers(id, (results)=>{
+    transactionsModels.deleteTransactions(id, (results)=>{
         return response(res, 'Transaction Deleted!', results[0]); 
     });
 };

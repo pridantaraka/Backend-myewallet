@@ -14,9 +14,9 @@ const {LIMIT_DATA} = process.env;
 
 //start getalluser serach
 exports.getAllUsers = (req, res)=>{
-    const {search='', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const {sortBy ='' ,search='', sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
     const offset = (page-1)*limit;
-    userModels.getAllUsers(search, limit, offset,(err, results,)=>{
+    userModels.getAllUsers(sortBy, search, sortType, limit, offset, (err, results,)=>{
         if (results.length < 1) {
             return res.redirect('/404');
         }
@@ -68,7 +68,10 @@ exports.updateUsers = (req, res) =>{
     if(!validation.isEmpty()){
         return response(res, 'Error occured', validation.array(), null, 400);
     }
-    userModels.updateUsers(id, req.body, (results)=>{
+    userModels.updateUsers(id, req.body, (err, results)=>{
+        if(err){
+            return errorResponse(err,res);
+        }
         return response(res, 'UPDATE data success!', results[0]);
     });
 };

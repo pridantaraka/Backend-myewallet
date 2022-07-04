@@ -1,18 +1,32 @@
 const db = require('../helpers/db');
 
 exports.getAllTransactions = (cb) =>{
-    db.query('SELECT * FROM transaction ORDER BY id_user ASC', (err, res)=>{
+    db.query('SELECT * FROM transaction ORDER BY id_transaction ASC', (err, res)=>{
         cb(res.rows);
     });
 };
 
 //start createTransaction
-exports.createTransaction = (data, cb)=>{
+exports.createTransactions = (data, cb)=>{
     const q = 'INSERT INTO transaction (time_transaction, recipient_id, sander_id, notes, id_user, amount, id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
     const val = [data.time_transaction, data.recipient_id, data.sander_id, data.notes, data.id_user, data.amount, data.id];
     db.query(q, val, (err,res)=>{
         if (res) {
-            cb(err, res.rows);
+            cb(err, res);
+        }else{
+            cb(err);
+        }
+    });
+};
+//end
+
+//start updateuser
+exports.updateTransactions = (id_transaction,data,cb)=>{
+    const q = 'UPDATE transaction SET time_transaction=$1, recipient_id=$2, sander_id=$3, notes=$4, id_user=$5, amount=$6, id=$7 WHERE id_transaction=$8 RETURNING *';
+    const val = [data.time_transaction, data.recipient_id, data.sander_id, data.notes, data.id_user, data.amount, data.id, id_transaction];
+    db.query(q, val, (err,res)=>{
+        if(res){
+            cb(err, res);
         }else{
             cb(err);
         }

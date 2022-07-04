@@ -9,17 +9,33 @@ exports.getAllProfiles = (req, res)=>{
     });
 };
 
-//start create profiles
+//start CreateProfile
 exports.createProfiles = (req, res) =>{
     const validation = validationResult(req);
     if(!validation.isEmpty()){
-        return response(res, 'Error occured', validation.array(), 400);
+        return response(res, 'Error occured', validation.array(), null, 400);
     }
-    profilesModels.createUsers(req.body, (err, results)=>{
+    profilesModels.createProfiles(req.body, (err, results)=>{
         if(err){  
             return errorResponse(err,res);
         }
-        return response(res, 'Create profile successfully', results[0]);    
+        return response(res, 'Create Profiles successfully', results.rows);    
+    });
+};
+//end
+
+//start update profiles
+exports.updateProfiles = (req, res) =>{
+    const {id} = req.params;
+    const validation = validationResult(req);
+    if(!validation.isEmpty()){
+        return response(res, 'Error occured', validation.array(), null, 400);
+    }
+    profilesModels.updateProfiles(id, req.body, (err, results)=>{
+        if(err){
+            return errorResponse(err,res);
+        }
+        return response(res, 'UPDATE data success!', results.rows);
     });
 };
 //end
@@ -27,7 +43,7 @@ exports.createProfiles = (req, res) =>{
 //start delete profiles
 exports.deleteProfiles = (req, res) =>{
     const {id} = req.params;
-    profilesModels.deleteUsers(id, (results)=>{
+    profilesModels.deleteProfiles(id, (results)=>{
         return response(res, 'profile Deleted!', results[0]); 
     });
 };

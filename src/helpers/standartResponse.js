@@ -14,7 +14,7 @@ const response = (res, msg, results, pageInfo, status=200) => {
         data.pageInfo = pageInfo;
     }
 
-    if(results){
+    if(res){
         data.results = results;
     }
 

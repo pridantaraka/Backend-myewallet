@@ -11,8 +11,8 @@ const {LIMIT_DATA} = process.env;
 // //end
 
 //start getalluser
-exports.getAllUsers = (keyword, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
-    db.query(`SELECT * FROM users WHERE email LIKE \'%${keyword}%\' ORDER BY id_user ASC LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
+exports.getAllUsers = (sortBy, keyword, sortType, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
+    db.query(`SELECT * FROM users WHERE ${sortBy} LIKE '%${keyword}%' ORDER BY id_user ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
         cb(err, res.rows);
     });
 };
@@ -20,7 +20,7 @@ exports.getAllUsers = (keyword, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
 
 //start countAlluser
 exports.countAllUser = (keyword, cb) => {
-    db.query(`SELECT * FROM users WHERE email LIKE \'%${keyword}%\' `, (err, res)=>{
+    db.query(`SELECT * FROM users WHERE email LIKE '%${keyword}%' `, (err, res)=>{
         cb(err, res.rowCount);
     });
 };
@@ -54,7 +54,11 @@ exports.updateUsers = (id_user,data,cb)=>{
     const q = 'UPDATE users SET email=$1, password=$2, username=$3, pin=$4 WHERE id_user=$5 RETURNING *';
     const val = [data.email, data.password, data.username, data.pin, id_user];
     db.query(q, val, (err,res)=>{
-        cb(res.rows);
+        if(res){
+            cb(err, res.rows);
+        }else{
+            cb(err);
+        }
     });
 };
 //end
