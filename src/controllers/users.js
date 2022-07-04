@@ -2,11 +2,39 @@ const response = require('../helpers/standartResponse');
 const userModels = require('../models/users');
 const { validationResult } = require('express-validator');
 const errorResponse = require('../helpers/errorResponse');
+const {LIMIT_DATA} = process.env;
 
-//start getalluser
+// //start getalluser
+// exports.getAllUsers = (req, res)=>{
+//     userModels.getAllUsers((results)=>{
+//         return response(res, 'Massage from standard response', results);
+//     });
+// };
+// //end
+
+//start getalluser serach
 exports.getAllUsers = (req, res)=>{
-    userModels.getAllUsers((results)=>{
-        return response(res, 'Massage from standard response', results);
+    const {search='', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const offset = (page-1)*limit;
+    userModels.getAllUsers(search, limit, offset,(err, results)=>{
+        if (results.length < 1) {
+            return res.redirect('/404');
+        }else{
+            return response(res, 'List All User', results);
+        }
+    });
+};
+//end
+
+//start userDetail
+exports.getUserbyId = (req,res) =>{
+    const {id} = req.params;
+    userModels.getUserbyId(id, (err,results)=>{
+        if(results.rows.length > 0){
+            return response(res, 'Detail User',results.rows[0]);
+        }else{
+            return res.redirect('/404');
+        }
     });
 };
 //end

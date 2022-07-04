@@ -1,9 +1,28 @@
 const db = require('../helpers/db');
 
+const {LIMIT_DATA} = process.env;
+
+// //start getalluser
+// exports.getAllUsers = (cb) =>{
+//     db.query('SELECT * FROM users ORDER BY id_user ASC', (err, res)=>{
+//         cb(res.rows);
+//     });
+// };
+// //end
+
 //start getalluser
-exports.getAllUsers = (cb) =>{
-    db.query('SELECT * FROM users ORDER BY id_user ASC', (err, res)=>{
-        cb(res.rows);
+exports.getAllUsers = (keyword, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
+    db.query(`SELECT * FROM users WHERE email LIKE \'%${keyword}%\' ORDER BY id_user ASC LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
+        cb(err, res.rows);
+    });
+};
+//end
+
+//start get user by id
+exports.getUserbyId = (id_user, cb) =>{
+    const q = 'SELECT * FROM users WHERE id_user=$1';
+    db.query(q, [id_user], (err, res)=>{
+        cb(err, res);
     });
 };
 //end
