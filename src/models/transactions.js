@@ -19,3 +19,13 @@ exports.createTransaction = (data, cb)=>{
     });
 };
 //end
+
+//start delete transaction
+exports.deleteTransactions = (id_transaction, cb)=>{
+    const q = 'DELETE FROM transaction WHERE id_transaction=$1 RETURNING *';
+    const val = [id_transaction];
+    db.query(q, val, (err,res)=>{
+        cb(res.rows);
+    });
+};
+//end

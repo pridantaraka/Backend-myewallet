@@ -1,10 +1,10 @@
 const response = require('../helpers/standartResponse');
-const profileModels = require('../models/profiles');
+const profilesModels = require('../models/profiles');
 const { validationResult } = require('express-validator');
 const errorResponse = require('../helpers/errorResponse');
 
 exports.getAllProfiles = (req, res)=>{
-    profileModels.getAllProfiles((results)=>{
+    profilesModels.getAllProfiles((results)=>{
         return response(res, 'Massage from standard response', results);
     });
 };
@@ -19,7 +19,16 @@ exports.createProfiles = (req, res) =>{
         if(err){  
             return errorResponse(err,res);
         }
-        return response(res, 'Create User successfully', results[0]);    
+        return response(res, 'Create profile successfully', results[0]);    
+    });
+};
+//end
+
+//start delete profiles
+exports.deleteProfiles = (req, res) =>{
+    const {id} = req.params;
+    profilesModels.deleteUsers(id, (results)=>{
+        return response(res, 'profile Deleted!', results[0]); 
     });
 };
 //end

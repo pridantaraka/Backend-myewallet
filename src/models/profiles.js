@@ -19,3 +19,13 @@ exports.createProfiles = (data, cb)=>{
     });
 };
 //end
+
+//start delete profiles
+exports.deleteProfiles = (id_profile, cb)=>{
+    const q = 'DELETE FROM profiles WHERE id_profile=$1 RETURNING *';
+    const val = [id_profile];
+    db.query(q, val, (err,res)=>{
+        cb(res.rows);
+    });
+};
+//end

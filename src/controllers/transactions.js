@@ -1,5 +1,5 @@
 const response = require('../helpers/standartResponse');
-const userModels = require('../models/transactions');
+const transactionsModels = require('../models/transactions');
 const { validationResult } = require('express-validator');
 const errorResponse = require('../helpers/errorResponse');
 
@@ -12,7 +12,7 @@ const errorResponse = require('../helpers/errorResponse');
 // };
 
 exports.getAllTransactions = (req, res)=>{
-    userModels.getAllTransactions((results)=>{
+    transactionsModels.getAllTransactions((results)=>{
         return response(res, 'Massage from standard response', results);
     });
 };
@@ -27,7 +27,16 @@ exports.createUsers = (req, res) =>{
         if(err){  
             return errorResponse(err,res);
         }
-        return response(res, 'Create User successfully', results[0]);    
+        return response(res, 'Create Transaction successfully', results[0]);    
+    });
+};
+//end
+
+//start delete transactions
+exports.deleteTransactions = (req, res) =>{
+    const {id} = req.params;
+    transactionsModels.deleteUsers(id, (results)=>{
+        return response(res, 'Transaction Deleted!', results[0]); 
     });
 };
 //end
