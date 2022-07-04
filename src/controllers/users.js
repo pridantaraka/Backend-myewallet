@@ -16,12 +16,19 @@ const {LIMIT_DATA} = process.env;
 exports.getAllUsers = (req, res)=>{
     const {search='', limit=parseInt(LIMIT_DATA), page=1} = req.query;
     const offset = (page-1)*limit;
-    userModels.getAllUsers(search, limit, offset,(err, results)=>{
+    userModels.getAllUsers(search, limit, offset,(err, results,)=>{
         if (results.length < 1) {
             return res.redirect('/404');
-        }else{
-            return response(res, 'List All User', results);
         }
+        const pageInfo = {};
+        userModels.countAllUser(search, (err, totalData)=>{
+            pageInfo.totalData = totalData;
+            pageInfo.totalPage = Math.ceil(totalData/limit);
+            pageInfo.currentPage = parseInt(page);
+            pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
+            pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
+            return response(res, 'List All User', results, pageInfo);
+        });
     });
 };
 //end
@@ -43,7 +50,7 @@ exports.getUserbyId = (req,res) =>{
 exports.createUsers = (req, res) =>{
     const validation = validationResult(req);
     if(!validation.isEmpty()){
-        return response(res, 'Error occured', validation.array(), 400);
+        return response(res, 'Error occured', validation.array(), null, 400);
     }
     userModels.createUsers(req.body, (err, results)=>{
         if(err){  
@@ -59,7 +66,7 @@ exports.updateUsers = (req, res) =>{
     const {id} = req.params;
     const validation = validationResult(req);
     if(!validation.isEmpty()){
-        return response(res, 'Error occured', validation.array(), 400);
+        return response(res, 'Error occured', validation.array(), null, 400);
     }
     userModels.updateUsers(id, req.body, (results)=>{
         return response(res, 'UPDATE data success!', results[0]);

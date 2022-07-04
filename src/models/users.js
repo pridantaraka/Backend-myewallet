@@ -18,6 +18,14 @@ exports.getAllUsers = (keyword, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
 };
 //end
 
+//start countAlluser
+exports.countAllUser = (keyword, cb) => {
+    db.query(`SELECT * FROM users WHERE email LIKE \'%${keyword}%\' `, (err, res)=>{
+        cb(err, res.rowCount);
+    });
+};
+//end
+
 //start get user by id
 exports.getUserbyId = (id_user, cb) =>{
     const q = 'SELECT * FROM users WHERE id_user=$1';
