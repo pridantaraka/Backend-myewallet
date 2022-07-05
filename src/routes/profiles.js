@@ -10,6 +10,7 @@ const profileValidator = [
 ];
 
 profiles.get('/', profilesControll.getAllProfiles);
+profiles.get('/:id', profilesControll.getProfilebyId);
 profiles.post('/', ...profileValidator,profilesControll.createProfiles);
 profiles.patch('/:id', ...profileValidator, profilesControll.updateProfiles);
 profiles.delete('/:id', profilesControll.deleteProfiles);

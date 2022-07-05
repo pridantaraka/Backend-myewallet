@@ -3,19 +3,34 @@ const transactionsModels = require('../models/transactions');
 const { validationResult } = require('express-validator');
 const errorResponse = require('../helpers/errorResponse');
 
-
-// exports.getAllTransactions = (req, res)=>{
-//     return res.json({
-//         success: true,
-//         message: 'List all transactions'
-//     });
-// };
-
+//get all Transaction
 exports.getAllTransactions = (req, res)=>{
     transactionsModels.getAllTransactions((results)=>{
         return response(res, 'Massage from standard response', results);
     });
 };
+//end
+
+//get all Transaction
+// exports.getAllTransactions = (req, res)=>{
+//     transactionsModels.getAllTransactions((results)=>{
+//         return response(res, 'Massage from standard response', results);
+//     });
+// };
+//end
+
+//start TransactionDetail
+exports.getTransbyId = (req,res) =>{
+    const {id} = req.params;
+    transactionsModels.getTransbyId(id, (err,results)=>{
+        if(results.rows.length > 0){
+            return response(res, 'Detail User',results.rows[0]);
+        }else{
+            return res.redirect('/404');
+        }
+    });
+};
+//end
 
 //start create Transactions
 exports.createTransactions = (req, res) =>{

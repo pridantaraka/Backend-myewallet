@@ -34,15 +34,6 @@ const UserValidator = [
 // ];
 //end
 
-//start Update uservalidator
-// const updateUserValidator = [
-//     body('email')
-//         .isEmail().withMessage('Email Format invalid'),
-//     body('username')
-//         .isLength({ min: 4 }).withMessage('Username length minimal 4 character')
-// ];
-//end
-
 
 users.get('/', body('limit').toInt(), body('page').toInt(), userController.getAllUsers);
 users.get('/:id', userController.getUserbyId);

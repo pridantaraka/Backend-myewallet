@@ -1,10 +1,22 @@
 const db = require('../helpers/db');
+// const {LIMIT_DATA} = process.env;
 
+//start get all profile
 exports.getAllProfiles = (cb) =>{
     db.query('SELECT * FROM profiles ORDER BY id_profile ASC', (err, res)=>{
         cb(res.rows);
     });
 };
+//end
+
+//start get Profile by id
+exports.getProfilebyId = (id_profile, cb) =>{
+    const q = 'SELECT * FROM profiles WHERE id_profile=$1';
+    db.query(q, [id_profile], (err, res)=>{
+        cb(err, res);
+    });
+};
+//end
 
 //start createProfiles
 exports.createProfiles = (data, cb)=>{
@@ -42,4 +54,17 @@ exports.deleteProfiles = (id_profile, cb)=>{
         cb(res.rows);
     });
 };
+//end
+
+// exports.getAllProfiles = (sortBy, keyword, sortType, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
+//     db.query(`SELECT * FROM profiles WHERE ${sortBy} LIKE '%${keyword}%' ORDER BY id_profiles ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
+//         cb(err, res);
+//     }); 
+// };
+//start countAllprofile
+// exports.countAllProfiles = (keyword, cb) => {
+//     db.query(`SELECT * FROM profiles WHERE fullname LIKE '%${keyword}%' `, (err, res)=>{
+//         cb(err, res.rowCount);
+//     });
+// };
 //end

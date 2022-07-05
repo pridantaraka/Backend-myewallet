@@ -14,6 +14,7 @@ const transValidator = [
 ];
 
 transactions.get('/', transControll.getAllTransactions);
+transactions.get('/:id', transControll.getTransbyId);
 transactions.post('/', ...transValidator, transControll.createTransactions);
 transactions.patch('/:id', ...transValidator, transControll.updateTransactions);
 transactions.delete('/:id', transControll.deleteTransactions);

@@ -20,6 +20,15 @@ exports.createTransactions = (data, cb)=>{
 };
 //end
 
+//start get transaction by id
+exports.getTransbyId = (id_transaction, cb) =>{
+    const q = 'SELECT * FROM transaction WHERE id_transaction=$1';
+    db.query(q, [id_transaction], (err, res)=>{
+        cb(err, res);
+    });
+};
+//end
+
 //start updateuser
 exports.updateTransactions = (id_transaction,data,cb)=>{
     const q = 'UPDATE transaction SET time_transaction=$1, recipient_id=$2, sander_id=$3, notes=$4, id_user=$5, amount=$6, id=$7 WHERE id_transaction=$8 RETURNING *';
