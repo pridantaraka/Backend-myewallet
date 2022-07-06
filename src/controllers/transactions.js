@@ -11,14 +11,6 @@ exports.getAllTransactions = (req, res)=>{
 };
 //end
 
-//get all Transaction
-// exports.getAllTransactions = (req, res)=>{
-//     transactionsModels.getAllTransactions((results)=>{
-//         return response(res, 'Massage from standard response', results);
-//     });
-// };
-//end
-
 //start TransactionDetail
 exports.getTransbyId = (req,res) =>{
     const {id} = req.params;
@@ -70,4 +62,12 @@ exports.deleteTransactions = (req, res) =>{
         return response(res, 'Transaction Deleted!', results[0]); 
     });
 };
+//end
+
+//get all Transaction
+// exports.getAllTransactions = (req, res)=>{
+//     transactionsModels.getAllTransactions((results)=>{
+//         return response(res, 'Massage from standard response', results);
+//     });
+// };
 //end
