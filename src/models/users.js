@@ -2,17 +2,9 @@ const db = require('../helpers/db');
 
 const {LIMIT_DATA} = process.env;
 
-// //start getalluser
-// exports.getAllUsers = (cb) =>{
-//     db.query('SELECT * FROM users ORDER BY id_user ASC', (err, res)=>{
-//         cb(res.rows);
-//     });
-// };
-// //end
-
 //start getalluser
-exports.getAllUsers = (sortBy, keyword, sortType, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
-    db.query(`SELECT * FROM users WHERE ${sortBy} LIKE '%${keyword}%' ORDER BY id_user ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
+exports.getAllUsers = (searchBy, keyword, sortType, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
+    db.query(`SELECT * FROM users WHERE ${searchBy} LIKE '%${keyword}%' ORDER BY id_user ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
         cb(err, res.rows);
     });
 };
@@ -72,3 +64,11 @@ exports.deleteUsers = (id_user, cb)=>{
     });
 };
 //end
+
+// //start getalluser
+// exports.getAllUsers = (cb) =>{
+//     db.query('SELECT * FROM users ORDER BY id_user ASC', (err, res)=>{
+//         cb(res.rows);
+//     });
+// };
+// //end

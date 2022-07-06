@@ -4,19 +4,11 @@ const { validationResult } = require('express-validator');
 const errorResponse = require('../helpers/errorResponse');
 const {LIMIT_DATA} = process.env;
 
-// //start getalluser
-// exports.getAllUsers = (req, res)=>{
-//     userModels.getAllUsers((results)=>{
-//         return response(res, 'Massage from standard response', results);
-//     });
-// };
-// //end
-
 //start getalluser serach
 exports.getAllUsers = (req, res)=>{
-    const {sortBy ='' ,search='', sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const {searchBy ='' ,search='', sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
     const offset = (page-1)*limit;
-    userModels.getAllUsers(sortBy, search, sortType, limit, offset, (err, results,)=>{
+    userModels.getAllUsers(searchBy, search, sortType, limit, offset, (err, results,)=>{
         if (results.length < 1) {
             return res.redirect('/404');
         }
@@ -85,3 +77,11 @@ exports.deleteUsers = (req, res) =>{
     });
 };
 //end
+
+// //start getalluser
+// exports.getAllUsers = (req, res)=>{
+//     userModels.getAllUsers((results)=>{
+//         return response(res, 'Massage from standard response', results);
+//     });
+// };
+// //end
