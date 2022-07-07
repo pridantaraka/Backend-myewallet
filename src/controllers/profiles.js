@@ -6,7 +6,7 @@ const { validationResult } = require('express-validator');
 
 const errorResponse = require('../helpers/errorResponse');
 
-const upload = require('../helpers/upload').single('picture');
+// const upload = require('../helpers/upload').single('picture');
 // const {LIMIT_DATA} = process.env;
 
 //start get all profile
@@ -69,16 +69,15 @@ exports.createProfiles = (req, res) =>{
 //start update profiles
 exports.updateProfiles = (req, res) =>{
     const {id} = req.params;
-    // const {upload} = req.body;
     const validation = validationResult(req);
     if(!validation.isEmpty()){
         return response(res, 'Error occured', validation.array(), null, 400);
     }
-    // upload(req, res, (err1)=>{
-    //     if(err1){
-    //         return response(res, `Failed to update: ${err1.massage}`, null, null, 400);
+    // upload(req, res, (err)=>{
+    //     if(err){
+    //         return response(res, `Failed to update: ${err.massage}`, null, null, 400);
     //     }
-    profilesModels.updateProfiles(id, req.body, (err, results)=>{
+    profilesModels.updateProfiles(id, req.body, req.file.filename, (err, results)=>{
         if(err){
             return errorResponse(err,res);
         }
