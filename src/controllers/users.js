@@ -1,6 +1,5 @@
 const response = require('../helpers/standartResponse');
 const userModels = require('../models/users');
-const { validationResult } = require('express-validator');
 const errorResponse = require('../helpers/errorResponse');
 const {LIMIT_DATA} = process.env;
 
@@ -40,10 +39,6 @@ exports.getUserbyId = (req,res) =>{
 
 //start create user
 exports.createUsers = (req, res) =>{
-    const validation = validationResult(req);
-    if(!validation.isEmpty()){
-        return response(res, 'Error occured', validation.array(), null, 400);
-    }
     userModels.createUsers(req.body, (err, results)=>{
         if(err){  
             return errorResponse(err,res);
@@ -56,10 +51,6 @@ exports.createUsers = (req, res) =>{
 //start updateuser
 exports.updateUsers = (req, res) =>{
     const {id} = req.params;
-    const validation = validationResult(req);
-    if(!validation.isEmpty()){
-        return response(res, 'Error occured', validation.array(), null, 400);
-    }
     userModels.updateUsers(id, req.body, (err, results)=>{
         if(err){
             return errorResponse(err,res);
@@ -77,11 +68,3 @@ exports.deleteUsers = (req, res) =>{
     });
 };
 //end
-
-// //start getalluser
-// exports.getAllUsers = (req, res)=>{
-//     userModels.getAllUsers((results)=>{
-//         return response(res, 'Massage from standard response', results);
-//     });
-// };
-// //end

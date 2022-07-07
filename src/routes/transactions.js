@@ -3,7 +3,7 @@ const { body } = require('express-validator');
 const transControll = require('../controllers/transactions');
 
 const transValidator = [
-    body('recipient_id')
+    body('amount')
         .isLength({min:1}).isNumeric().withMessage('Must input 1 number'),
     body('sander_id')
         .isLength({min:1}).isNumeric().withMessage('Must input 1 number'),
