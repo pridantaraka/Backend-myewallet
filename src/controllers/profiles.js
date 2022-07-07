@@ -1,39 +1,27 @@
 const response = require('../helpers/standartResponse');
-
 const profilesModels = require('../models/profiles');
-
 const errorResponse = require('../helpers/errorResponse');
-
-
-// const {LIMIT_DATA} = process.env;
+const {LIMIT_DATA} = process.env;
 
 //start get all profile
 exports.getAllProfiles = (req, res)=>{
-    profilesModels.getAllProfiles((results)=>{
-        return response(res, 'Massage from standard response', results);
+    const {searchBy ='' ,search='', sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const offset = (page-1)*limit;
+    profilesModels.getAllProfiles(searchBy, search, sortType, limit, offset, (err, results)=>{
+        if (results.length < 1) {
+            return res.redirect('/404');
+        }
+        const pageInfo = {};
+        profilesModels.countAllProfiles(search, (err, totalData)=>{
+            pageInfo.totalData = totalData;
+            pageInfo.totalPage = Math.ceil(totalData/limit);
+            pageInfo.currentPage = parseInt(page);
+            pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
+            pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
+            return response(res, 'List All User', results, pageInfo);
+        });
     });
 };
-//end
-
-//start get all profile
-// exports.getAllProfiles = (req, res)=>{
-//     const {sortBy ='' ,search='', sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
-//     const offset = (page-1)*limit;
-//     profilesModels.getAllProfiles(sortBy, search, sortType, limit, offset, (err, results,)=>{
-//         if (results < 1) {
-//             return res.redirect('/404');
-//         }
-//         const pageInfo = {};
-//         profilesModels.countAllProfiles(search, (err, totalData)=>{
-//             pageInfo.totalData = totalData;
-//             pageInfo.totalPage = Math.ceil(totalData/limit);
-//             pageInfo.currentPage = parseInt(page);
-//             pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
-//             pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
-//             return response(res, 'List All User', results, pageInfo);
-//         });
-//     });
-// };
 //end
 
 //start profileDetail

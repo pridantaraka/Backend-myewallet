@@ -3,10 +3,11 @@ const validatorRule = require('./profileValidator');
 const profilesControll = require('../controllers/profiles');
 const uploadProfile = require('../middleware/uploadProfile');
 const validation = require('../middleware/validation');
+const { body } = require('express-validator');
 
 
 
-profiles.get('/', profilesControll.getAllProfiles);
+profiles.get('/', body('limit').toInt(), body('page').toInt(),profilesControll.getAllProfiles);
 profiles.get('/:id', profilesControll.getProfilebyId);
 profiles.post('/',  uploadProfile, ...validatorRule, validation, profilesControll.createProfiles);
 profiles.patch('/:id', uploadProfile, ...validatorRule, validation, profilesControll.updateProfiles);
