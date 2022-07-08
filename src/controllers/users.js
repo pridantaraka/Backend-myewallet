@@ -68,3 +68,11 @@ exports.deleteUsers = (req, res) =>{
     });
 };
 //end
+
+//get all users
+// exports.getAllUsers = (req, res)=>{
+//     userModels.getAllUsers((results)=>{
+//         return response(res, 'Massage from standard response', results);
+//     });
+// };
+//end

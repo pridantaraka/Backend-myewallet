@@ -1,22 +1,13 @@
 const transactions = require('express').Router();
-const { body } = require('express-validator');
+// const { body } = require('express-validator');
 const transControll = require('../controllers/transactions');
-
-const transValidator = [
-    body('amount')
-        .isLength({min:1}).isNumeric().withMessage('Must input 1 number'),
-    body('sander_id')
-        .isLength({min:1}).isNumeric().withMessage('Must input 1 number'),
-    body('id_user')
-        .isLength({min:1}).isNumeric().withMessage('Must input 1 number'),
-    body('id')
-        .isLength({min:1}).isNumeric().withMessage('Must input 1 number')
-];
+const transRule = require('./transValidator');
+const validation = require('../middleware/validation');
 
 transactions.get('/', transControll.getAllTransactions);
 transactions.get('/:id', transControll.getTransbyId);
-transactions.post('/', ...transValidator, transControll.createTransactions);
-transactions.patch('/:id', ...transValidator, transControll.updateTransactions);
+transactions.post('/', ...transRule, validation, transControll.createTransactions);
+transactions.patch('/:id', ...transRule, validation, transControll.updateTransactions);
 transactions.delete('/:id', transControll.deleteTransactions);
 
 module.exports = transactions;

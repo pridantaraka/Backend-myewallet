@@ -2,7 +2,7 @@ const { body } = require('express-validator');
 
 const profileValidator = [
     body('id_user')
-        .isInt().withMessage('id must number'),
+        .toInt().isNumeric().withMessage('id must number'),
     body('phonenumber')
         .isMobilePhone('id-ID').withMessage('Input your phone number correctly'),
     body('fullname')

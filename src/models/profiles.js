@@ -1,12 +1,20 @@
 const db = require('../helpers/db');
 const {LIMIT_DATA} = process.env;
 
-//start get all profile
-// exports.getAllProfiles = (cb) =>{
-//     db.query('SELECT * FROM profiles ORDER BY id_profile ASC', (err, res)=>{
-//         cb(res.rows);
-//     });
-// };
+//start getAllprofile
+exports.getAllProfiles = (searchBy, keyword, sortType, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
+    db.query(`SELECT * FROM profiles WHERE ${searchBy} LIKE '%${keyword}%' ORDER BY id_profile ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
+        cb(err, res.rows);
+    }); 
+};
+//end
+
+// start countAllprofile
+exports.countAllProfiles = (keyword, cb) => {
+    db.query(`SELECT * FROM profiles WHERE fullname LIKE '%${keyword}%' `, (err, res)=>{
+        cb(err, res.rowCount);
+    });
+};
 //end
 
 //start get Profile by id
@@ -56,16 +64,3 @@ exports.deleteProfiles = (id_profile, cb)=>{
 };
 //end
 
-exports.getAllProfiles = (searchBy, keyword, sortType, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
-    db.query(`SELECT * FROM profiles WHERE ${searchBy} LIKE '%${keyword}%' ORDER BY id_profile ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
-        cb(err, res.rows);
-    }); 
-};
-
-// start countAllprofile
-exports.countAllProfiles = (keyword, cb) => {
-    db.query(`SELECT * FROM profiles WHERE fullname LIKE '%${keyword}%' `, (err, res)=>{
-        cb(err, res.rowCount);
-    });
-};
-//end
