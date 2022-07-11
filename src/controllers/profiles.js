@@ -39,7 +39,11 @@ exports.getProfilebyId = (req,res) =>{
 
 //start CreateProfile
 exports.createProfiles = (req, res) =>{
-    profilesModels.createProfiles(req.body, req.file.filename, (err, results)=>{
+    let filename = null;
+    if(req.file){
+        filename = req.file.filename;
+    }
+    profilesModels.createProfiles(req.body, filename, (err, results)=>{
         if(err){  
             return errorResponse(err,res);
         }
@@ -50,8 +54,13 @@ exports.createProfiles = (req, res) =>{
 
 //start update profiles
 exports.updateProfiles = (req, res) =>{
-    const {id} = req.params;    
-    profilesModels.updateProfiles(id, req.body, req.file.filename, (err, results)=>{
+    const {id} = req.params;
+    let filename = null;
+    if(req.file){
+        filename = req.file.filename;
+    }
+    profilesModels.updateProfiles(id, filename, req.body, (err, results)=>{
+        console.log(err);
         if(err){
             return errorResponse(err,res);
         }

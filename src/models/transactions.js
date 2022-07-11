@@ -1,10 +1,32 @@
 const db = require('../helpers/db');
+const {LIMIT_DATA} = process.env;
 
-exports.getAllTransactions = (cb) =>{
-    db.query('SELECT * FROM transaction ORDER BY id_transaction ASC', (err, res)=>{
-        cb(res.rows);
+//start getAllTransaction
+exports.getAllTransactions = (searchBy, keyword, sortType, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
+    db.query(`SELECT * FROM transaction WHERE ${searchBy} LIKE '%${keyword}%' ORDER BY id_transaction ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
+        console.log(err);
+        cb(err, res.rows);
     });
 };
+//end
+
+//start countalltransaction
+exports.countAllTransactions = (keyword, cb) => {
+    db.query(`SELECT * FROM transaction WHERE notes LIKE '%${keyword}%' `, (err, res)=>{
+        console.log(err);
+        cb(err, res.rowCount);
+    });
+};
+//end
+
+//start get transaction by id
+exports.getTransbyId = (id_transaction, cb) =>{
+    const q = 'SELECT * FROM transaction WHERE id_transaction=$1';
+    db.query(q, [id_transaction], (err, res)=>{
+        cb(err, res);
+    });
+};
+//end
 
 //start createTransaction
 exports.createTransactions = (data, cb)=>{
@@ -16,15 +38,6 @@ exports.createTransactions = (data, cb)=>{
         }else{
             cb(err);
         }
-    });
-};
-//end
-
-//start get transaction by id
-exports.getTransbyId = (id_transaction, cb) =>{
-    const q = 'SELECT * FROM transaction WHERE id_transaction=$1';
-    db.query(q, [id_transaction], (err, res)=>{
-        cb(err, res);
     });
 };
 //end

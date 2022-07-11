@@ -28,9 +28,31 @@ exports.getProfilebyId = (id_profile, cb) =>{
 
 //start createProfiles
 exports.createProfiles = (data, picture, cb)=>{
-    const q = 'INSERT INTO profiles (phonenumber, fullname, balance, picture, id_user) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-    const val = [data.phonenumber, data.fullname, data.balance, picture, data.id_user];
+    let val=[];
+
+    const filtered = {};
+    const obj = {
+        picture,
+        fullname: data.fullname,
+        balance: data.balance,
+        phonenumber: data.phonenumber,
+        id_user: data.id_user,
+    };
+
+    for(let x in obj){
+        if(obj[x]!==null){
+            filtered[x] = obj [x];
+            val.push(obj[x]);
+        }
+    }
+
+    const key = Object.keys(filtered);
+    const strKey = key.join();
+    const finalResult = key.map((o, ind) => `$${ind+1}`);
+    
+    const q = `INSERT INTO profiles (${strKey}) VALUES (${finalResult}) RETURNING *`;
     db.query(q, val, (err,res)=>{
+        console.log(err);
         if (res) {
             cb(err, res);
         }else{
@@ -41,15 +63,30 @@ exports.createProfiles = (data, picture, cb)=>{
 //end
 
 //start updateuser
-exports.updateProfiles = (id_profile,data,picture,cb)=>{
-    const q = 'UPDATE profiles SET phonenumber=$1, fullname=$2, balance=$3, picture=$4, id_user=$5 WHERE id_profile=$6 RETURNING *';
-    const val = [data.phonenumber, data.fullname, data.balance, picture, data.id_user, id_profile];
-    db.query(q, val, (err,res)=>{
-        if(res){
-            cb(err, res);
-        }else{
-            cb(err);
+exports.updateProfiles = (id_profile, picture, data, cb)=>{
+    let val = [id_profile];
+
+    const filtered = {};
+    const obj = {
+        picture,
+        fullname: data.fullname,
+        balance: data.balance,
+        phonenumber: data.phonenumber,
+    };
+
+    for(let x in obj){
+        if(obj[x]!==null){
+            filtered[x] = obj [x];
+            val.push(obj[x]);
         }
+    }
+
+    const key = Object.keys(filtered);
+    const finalResult = key.map((o, ind) => `${o}=$${ind+2}`);
+
+    const q = `UPDATE profiles SET ${finalResult} WHERE id_profile=$1 RETURNING *`;
+    db.query(q, val, (err,res)=>{
+        cb(err, res);
     });
 };
 //end

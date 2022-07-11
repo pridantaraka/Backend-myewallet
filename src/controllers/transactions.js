@@ -1,11 +1,25 @@
 const response = require('../helpers/standartResponse');
 const transactionsModels = require('../models/transactions');
 const errorResponse = require('../helpers/errorResponse');
+const {LIMIT_DATA} = process.env;
 
 //get all Transaction
 exports.getAllTransactions = (req, res)=>{
-    transactionsModels.getAllTransactions((results)=>{
-        return response(res, 'Massage from standard response', results);
+    const {searchBy ='' ,search='', sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const offset = (page-1)*limit;
+    transactionsModels.getAllTransactions(searchBy, search, sortType, limit, offset, (err, results)=>{
+        if (results.length < 1) {
+            return res.redirect('/404');
+        }
+        const pageInfo = {};
+        transactionsModels.countAllTransactions(search, (err, totalData)=>{
+            pageInfo.totalData = totalData;
+            pageInfo.totalPage = Math.ceil(totalData/limit);
+            pageInfo.currentPage = parseInt(page);
+            pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
+            pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
+            return response(res, 'List All Transaction', results, pageInfo);
+        });
     });
 };
 //end

@@ -2,7 +2,7 @@ const { body } = require('express-validator');
 const bcrypt = require('bcrypt');
 
 //start user
-const UserValidator = [
+exports.register = [
     body('email')
         .isEmail().withMessage('Email Format invalid'),
     body('username')
@@ -12,10 +12,23 @@ const UserValidator = [
         .customSanitizer(async (val) =>{
             const hash = await bcrypt.hash(val, 10);
             return hash;
-        }),
-    body('pin')
-        .isLength({ min: 6, max:6 }).isNumeric().withMessage('PIN must be 6 number') 
+        })
 ];
 //end
 
-module.exports = UserValidator;
+//start pin
+exports.pin = [
+    body('email')
+        .isEmail().withMessage('Email Format invalid'),
+    body('pin')
+        .isLength({ min: 6, max:6 }).withMessage('PIN must be 6 number') 
+        .isNumeric().withMessage('PIN must be a number') 
+];
+//end
+
+//start pin
+exports.login = [
+    body('email')
+        .isEmail().withMessage('Email Format invalid'),
+];
+//end
