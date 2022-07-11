@@ -1,4 +1,5 @@
 const response = require('../helpers/standartResponse');
+const regisModel = require('../models/auth');
 const userModels = require('../models/users');
 const errorResponse = require('../helpers/errorResponse');
 const bcrypt = require('bcrypt');
@@ -6,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 exports.register = (req, res) => {
     req.body.pin = null;
-    userModels.createUsers(req.body, (err) => {
+    regisModel.register(req.body, (err) => {
         if(err){  
             return errorResponse(err,res);
         }
@@ -45,7 +46,7 @@ exports.login = (req,res) =>{
         const user = results.rows[0];
         bcrypt.compare(password, user.password)
             .then((cpRes)=>{
-                const token = jwt.sign({id: user.id}, process.env.APP_SECRET||'secretKey');
+                const token = jwt.sign({id_user: user.id_user}, process.env.APP_SECRET||'secretKey');
                 if (cpRes) {
                     return response(res, 'Login success', {token});
                 }

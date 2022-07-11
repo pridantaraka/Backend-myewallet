@@ -18,9 +18,10 @@ exports.countAllProfiles = (keyword, cb) => {
 //end
 
 //start get Profile by id
-exports.getProfilebyId = (id_profile, cb) =>{
-    const q = 'SELECT * FROM profiles WHERE id_profile=$1';
-    db.query(q, [id_profile], (err, res)=>{
+exports.getProfilebyId = (id_user, cb) =>{
+    const q = 'SELECT * FROM profiles WHERE id_user=$1';
+    const val = [id_user];
+    db.query(q, val, (err, res)=>{
         cb(err, res);
     });
 };

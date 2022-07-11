@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const authMw = require('./src/middleware/auth');
+// const authMw = require('./src/middleware/auth');
 
 
 global.__basepath = __dirname;
@@ -18,16 +18,16 @@ app.get('/',(req, res)=>{
     });
 });
 
-app.get('/authUser', authMw, (req, res) => {
-    const userModels = require('./src/models/users');
-    userModels.getUserbyId(req.authMw.id_user, (err, results)=>{
-        console.log(err);
-        const user = results.rows[0];
-        return res.json({
-            massage:'Hello' +user.email
-        });
-    }); 
-});
+// app.get('/authUser', authMw, (req, res) => {
+//     const userModels = require('./src/models/users');
+//     userModels.getUserbyId(req.authUser.id, (err, results)=>{
+//         console.log(req.authUser.id);
+//         const user = results.rows[0];
+//         return res.json({
+//             massage:'Hello ' +user.email
+//         });
+//     }); 
+// });
 
 app.use('/',require('./src/routes'));
 
