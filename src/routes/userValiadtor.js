@@ -14,7 +14,8 @@ const UserValidator = [
             return hash;
         }),
     body('pin')
-        .isLength({ min: 6, max:6 }).isNumeric().withMessage('PIN must be 6 number') 
+        .isLength({ min: 6, max:6 }).withMessage('PIN must be 6 number') 
+        .isNumeric().withMessage('PIN must be a number') 
 ];
 //end
 

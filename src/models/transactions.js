@@ -30,8 +30,8 @@ exports.getTransbyId = (id_transaction, cb) =>{
 
 //start createTransaction
 exports.createTransactions = (data, cb)=>{
-    const q = 'INSERT INTO transaction (time_transaction, recipient_id, sander_id, notes, amount, id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-    const val = [data.time_transaction, data.recipient_id, data.sander_id, data.notes, data.amount, data.id];
+    const q = 'INSERT INTO transaction (time_transaction, notes, amount, id) VALUES ($1, $2, $3, $4) RETURNING *';
+    const val = [data.time_transaction, data.notes, data.amount, data.id];
     db.query(q, val, (err,res)=>{
         if (res) {
             cb(err, res);
@@ -44,8 +44,8 @@ exports.createTransactions = (data, cb)=>{
 
 //start updateuser
 exports.updateTransactions = (id_transaction,data,cb)=>{
-    const q = 'UPDATE transaction SET time_transaction=$1, recipient_id=$2, sander_id=$3, notes=$4, amount=$5, id=$6 WHERE id_transaction=$7 RETURNING *';
-    const val = [data.time_transaction, data.recipient_id, data.sander_id, data.notes, data.amount, data.id, id_transaction];
+    const q = 'UPDATE transaction SET time_transaction=$1 notes=$2, amount=$3, id=$4 WHERE id_transaction=$5 RETURNING *';
+    const val = [data.time_transaction, data.notes, data.amount, data.id, id_transaction];
     db.query(q, val, (err,res)=>{
         if(res){
             cb(err, res);
