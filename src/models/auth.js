@@ -51,7 +51,7 @@ exports.editProfiles = (id_user, picture, data, cb)=>{
         balance: data.balance,
         phonenumber: data.phonenumber,
     };
-    console.log(obj);
+    
     for(let x in obj){
         if(obj[x]!==null){
             if (obj[x]!==undefined) {
@@ -105,8 +105,8 @@ exports.transfer = (sander_id, data, cb) => {
         if (err){
             console.log('err1');
         }else{
-            const queryText = 'INSERT INTO transaction (time_transaction, recipient_id, sander_id, notes, amount, id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-            db.query(queryText, [data.time_transaction, data.recipient_id, sander_id, data.notes, data.amount, data.id], (err, res) => {
+            const queryText = 'INSERT INTO transaction (time_transaction, recipient_id, sander_id, notes, amount, type_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+            db.query(queryText, [data.time_transaction, data.recipient_id, sander_id, data.notes, data.amount, data.type_id], (err, res) => {
                 cb(err,res);
                 if (err) {
                     console.log(err);
@@ -114,16 +114,16 @@ exports.transfer = (sander_id, data, cb) => {
                     const insertSender = 'UPDATE profiles SET balance = balance - $1 WHERE id_user = $2 RETURNING *';
                     const insertSenderValues = [data.amount, res.rows[0].sander_id];
                     db.query(insertSender, insertSenderValues, (err, res) => {
-                        cb(err,res);
                         if(err){
-                            console.log(err);
+                            cb(err,res);
+                            console.log('err');
                         }else{
-                            const insertRecip = 'UPDATE profiles SET balance = balance + $1 WHERE id_user = $2 RETURNING *r';
+                            const insertRecip = 'UPDATE profiles SET balance = balance + $1 WHERE id_user = $2 RETURNING *';
                             const insertRecipValues = [data.amount, res.rows[0].recipient_id];
                             db.query(insertRecip, insertRecipValues, (err,res) =>{
-                                cb(err,res);
                                 if (err) {
-                                    console.log(err);
+                                    cb(err,res);
+                                    console.log('err');
                                 }else{
                                     cb(err,res);
                                     db.query('COMMIT', err => {

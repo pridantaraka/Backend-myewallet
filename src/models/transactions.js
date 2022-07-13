@@ -30,9 +30,10 @@ exports.getTransbyId = (id_transaction, cb) =>{
 
 //start createTransaction
 exports.createTransactions = (data, cb)=>{
-    const q = 'INSERT INTO transaction (time_transaction, notes, amount, id) VALUES ($1, $2, $3, $4) RETURNING *';
-    const val = [data.time_transaction, data.notes, data.amount, data.id];
+    const q = 'INSERT INTO transaction (time_transaction, notes, recipient_id, sander_id, amount, type_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    const val = [data.time_transaction, data.notes, data.recipient_id, data.sander_id, data.amount, data.type_id];
     db.query(q, val, (err,res)=>{
+        console.log(val);
         if (res) {
             cb(err, res);
         }else{

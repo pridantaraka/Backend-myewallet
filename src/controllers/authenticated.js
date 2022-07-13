@@ -40,7 +40,7 @@ exports.editUsersPin = (req, res) =>{
         if(err){
             return errorResponse(err,res);
         }
-        return response(res, 'UPDATE data success!', results.rows[0]);
+        return response(res, 'UPDATE data success!', results.rows[0]);   
     });
 };
 
@@ -49,7 +49,8 @@ exports.transfer = (req, res) => {
     regisModel.transfer(id, req.body, (err, results)=>{
         if(err){
             return errorResponse(err,res);
+        }else{
+            return response(res, 'TRANSFER data success!', results.rows[0]);
         }
-        return response(res, 'TRANSFER data success!', results.rows[0]);
     });
 };
