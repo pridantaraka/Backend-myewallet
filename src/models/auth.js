@@ -70,6 +70,37 @@ exports.editProfiles = (id_user, picture, data, cb)=>{
 };
 //end
 
+// topUp
+exports.updateBalance =(id_user,data,cb)=>{
+    db.query('BEGIN', err => {
+        if(err){
+            return err;
+        }
+        const balance = parseInt(data.balance);
+        const q ='UPDATE profiles SET balance=balance + $1 WHERE id_user=$2 RETURNING *';
+        const val = [balance, id_user];
+        db.query(q, val, (err, res)=>{
+            if(err){
+                return cb(err);
+            }
+            const q ='INSERT INTO transaction (time_transaction, notes, recipient_id, sander_id, amount, type_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+            const val = [data.time_transaction, data.notes, data.recipient_id, data.sander_id, balance, data.type_id];
+            db.query(q, val, (err, res)=>{
+                if(err){
+                    return cb(err);
+                }
+                cb(err, res);
+                db.query('COMMIT', err => {
+                    if (err) {
+                        console.error('Error committing transaction', err.stack);
+                    }
+                });
+            });
+        });
+    });
+};
+// end
+
 //start updateuserPin
 exports.editUsersPin = (id_user,data,cb)=>{
     let val = [id_user];
@@ -105,8 +136,10 @@ exports.transfer = (sander_id, data, cb) => {
         if (err){
             console.log('err1');
         }else{
+            
             const queryText = 'INSERT INTO transaction (time_transaction, recipient_id, sander_id, notes, amount, type_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-            db.query(queryText, [data.time_transaction, data.recipient_id, sander_id, data.notes, data.amount, data.type_id], (err, res) => {
+            const val = [data.time_transaction, data.recipient_id, sander_id, data.notes, data.amount, data.type_id];
+            db.query(queryText, val, (err, res) => {
                 cb(err,res);
                 if (err) {
                     console.log(err);

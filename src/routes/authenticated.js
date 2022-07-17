@@ -8,6 +8,8 @@ const authMw = require('../middleware/auth');
 authenticated.get('/status', authMw, authenController.getProfileid);
 authenticated.post('/transfer', ...rules.ruleTransfer, validation, authMw, authenController.transfer);
 authenticated.patch('/update', uploadProfile,...rules.editProfile, validation, authMw, authenController.editProfiles);
-authenticated.patch('/change', ...rules.changePin, validation, authMw, authenController.editUsersPin);
+authenticated.patch('/pin', ...rules.changePin, validation, authMw, authenController.editUsersPin);
+authenticated.patch('/pwd', ...rules.changePwd, validation, authMw, authenController.editUserPwd);
+authenticated.patch('/topup', authMw, authenController. );
 
 module.exports = authenticated;

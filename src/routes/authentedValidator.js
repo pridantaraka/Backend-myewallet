@@ -3,15 +3,18 @@ const bcrypt = require('bcrypt');
 
 
 exports.changePin = [
-    body('password')
+    body('pin')
+        .isLength({ min: 6, max:6 }).withMessage('PIN must be 6 number') 
+        .isNumeric().withMessage('PIN must be a number') 
+];
+
+exports.changePwd =[
+    body('currentPassword')
         .isLength({ min: 8 }).withMessage('Password length minimal 8 character')
         .customSanitizer(async (val) =>{
             const hash = await bcrypt.hash(val, 10);
             return hash;
-        }),
-    body('pin')
-        .isLength({ min: 6, max:6 }).withMessage('PIN must be 6 number') 
-        .isNumeric().withMessage('PIN must be a number') 
+        }).optional({nullable:true}),
 ];
 
 exports.editProfile = [
