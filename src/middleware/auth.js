@@ -18,7 +18,6 @@ const auth = (req, res, next)=>{
     }else{
         return response(res, 'Unauthorized', null, null, 401);
     }
-    
 };
 
 module.exports = auth;

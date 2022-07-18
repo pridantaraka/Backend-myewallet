@@ -9,7 +9,7 @@ exports.changePin = [
 ];
 
 exports.changePwd =[
-    body('currentPassword')
+    body('newPassword')
         .isLength({ min: 8 }).withMessage('Password length minimal 8 character')
         .customSanitizer(async (val) =>{
             const hash = await bcrypt.hash(val, 10);

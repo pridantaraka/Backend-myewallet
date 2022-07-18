@@ -9,7 +9,10 @@ authenticated.get('/status', authMw, authenController.getProfileid);
 authenticated.post('/transfer', ...rules.ruleTransfer, validation, authMw, authenController.transfer);
 authenticated.patch('/update', uploadProfile,...rules.editProfile, validation, authMw, authenController.editProfiles);
 authenticated.patch('/pin', ...rules.changePin, validation, authMw, authenController.editUsersPin);
-authenticated.patch('/pwd', ...rules.changePwd, validation, authMw, authenController.editUserPwd);
-authenticated.patch('/topup', authMw, authenController. );
+authenticated.patch('/pwd', (req, res, next)=>{
+  req.body.plainPassword=req.body.newPassword;
+  next();
+} ,...rules.changePwd, validation, authMw, authenController.editUserPwd);
+authenticated.patch('/topup', authMw, authenController.topUp);
 
 module.exports = authenticated;

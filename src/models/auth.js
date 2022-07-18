@@ -79,7 +79,7 @@ exports.updateBalance =(id_user,data,cb)=>{
         const balance = parseInt(data.balance);
         const q ='UPDATE profiles SET balance=balance + $1 WHERE id_user=$2 RETURNING *';
         const val = [balance, id_user];
-        db.query(q, val, (err, res)=>{
+        db.query(q, val, (err,)=>{
             if(err){
                 return cb(err);
             }
@@ -107,7 +107,7 @@ exports.editUsersPin = (id_user,data,cb)=>{
 
     const filtered = {};
     const obj = {
-        password:data.password,
+        password:data.newPassword,
         pin:data.pin,
     };
 
