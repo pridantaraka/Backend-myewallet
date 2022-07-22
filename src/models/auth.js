@@ -1,4 +1,5 @@
 const db = require('../helpers/db');
+// const {LIMIT_DATA} = process.env;
 
 exports.register = (data, cb) => {
     db.query('BEGIN', err => {
@@ -39,6 +40,20 @@ exports.getProfileid = (id_user, cb) =>{
     });
 };
 //end
+
+exports.getTransaction = (id_user, sortType, limit, offset=0, cb) =>{
+    db.query(`SELECT * FROM transaction WHERE sander_id = ${id_user} OR recipient_id = ${id_user} ORDER BY id_transaction ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
+        console.log(err);
+        cb(err, res.rows);
+    });
+};
+
+exports.countTransaction = (id_user, cb) => {
+    db.query(`SELECT * FROM transaction WHERE sander_id = ${id_user} OR recipient_id = ${id_user}`, (err, res)=>{
+        console.log(err);
+        cb(err, res.rowCount);
+    });
+};
 
 //start updateuser
 exports.editProfiles = (id_user, picture, data, cb)=>{

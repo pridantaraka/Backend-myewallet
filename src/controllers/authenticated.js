@@ -1,15 +1,14 @@
 const response = require('../helpers/standartResponse');
 // const profilesModels = require('../models/profiles');
 const regisModel = require('../models/auth');
-// const {LIMIT_DATA} = process.env;
 // const authMw = require('../middleware/auth');
 const errorResponse = require('../helpers/errorResponse');
 const userModels = require('../models/users');
 const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
+const {LIMIT_DATA} = process.env;
 
 //start profileDetail
-exports.getProfileid = (req,res) =>{
+exports.getUserlogin = (req,res) =>{
     const id = req.authUser.id_user;
     regisModel.getProfileid(id, (err,results)=>{
         if(results.rows.length > 0){
@@ -20,6 +19,27 @@ exports.getProfileid = (req,res) =>{
     });
 };
 //end
+
+exports.getHistoryTransaction = (req,res) =>{
+    const id = req.authUser.id_user;
+    const {sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const offset = (page-1)*limit;
+    regisModel.getTransaction(id, sortType, limit, offset, (err, results)=>{
+        if (results.length < 1) {
+            return res.redirect('/404');
+        }
+        const pageInfo = {};
+        regisModel.countTransaction(id, (err, totalData)=>{
+            pageInfo.totalData = totalData;
+            pageInfo.totalPage = Math.ceil(totalData/limit);
+            pageInfo.currentPage = parseInt(page);
+            pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
+            pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
+            return response(res, 'List All Transaction', results, pageInfo);
+        });
+    });
+};
+
 
 exports.editProfiles = (req, res) =>{
     const id = req.authUser.id_user;
@@ -50,11 +70,11 @@ exports.editUsersPin = (req, res) =>{
     const id = req.authUser.id_user;
     userModels.getUserbyId(id, (err, results1)=>{
         if(results1.rows[0].pin === req.body.currentPin){
-            regisModel.editUsersPin(id, req.body, (err, results)=>{
+            regisModel.editUsersPin(id, req.body, (err)=>{
                 if(err){
                     return errorResponse(err,res);
                 }
-                return response(res, 'UPDATE data success!', results.rows[0]);   
+                return response(res, 'UPDATE data success!');   
             });
         }else{
             return response(res, 'Your pin not match');
@@ -66,22 +86,22 @@ exports.editUserPwd = (req, res) =>{
     const id = req.authUser.id_user;
     const {plainPassword} = req.body;
     if(plainPassword === req.body.repeatPassword){
-        userModels.getUserbyId(id, (err, results1)=>{
-            console.log(err);
+        userModels.getUserbyId(id, (err, results1)=>{ 
             bcrypt.compare(req.body.currentPassword,results1.rows[0].password)
                 .then((cpRes)=>{
-                    console.log(cpRes);
                     if (cpRes) {
-                        regisModel.editUsersPin(id, req.body,(err,results)=>{
+                        regisModel.editUsersPin(id, req.body,(err)=>{
                             if(err){
                                 return errorResponse(err,res);
                             }
-                            return response(res, 'UPDATE data success!', results.rows[0]); 
+                            return response(res, 'UPDATE Password success!',); 
                         });
+                    }else{
+                        return response(res,'Your password not true input again');
                     }
                 })
                 .catch(e =>{
-                    return response(res, '2Password not match',null, null, 400);
+                    return response(res, 'Password not match',null, null, 400);
                 });      
         });
     }else{
