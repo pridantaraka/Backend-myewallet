@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const cors = require('cors');
 const express = require('express');
 // const authMw = require('./src/middleware/auth');
 
@@ -18,6 +19,15 @@ app.get('/',(req, res)=>{
     });
 });
 
+app.use(cors());
+ 
+app.get('/', function (req, res) {
+    res.json({msg: 'This is CORS-enabled for all origins!'});
+});
+ 
+app.listen(80, function () {
+    console.log('CORS-enabled web server listening on port 80');
+});
 // app.get('/authUser', authMw, (req, res) => {
 //     const userModels = require('./src/models/users');
 //     userModels.getUserbyId(req.authUser.id, (err, results)=>{
