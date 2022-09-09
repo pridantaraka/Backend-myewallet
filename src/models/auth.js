@@ -48,8 +48,8 @@ exports.getAllUsers = (cb) =>{
     });
 };
 
-exports.getTransaction = (id_user, recipient_id, sortType, limit, offset=0, cb) =>{
-    const q = `SELECT sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t INNER JOIN profiles p on p.id_user = t.recipient_id WHERE t.sander_id = ${id_user} OR t.recipient_id = ${recipient_id} ORDER BY t.id_transaction ${sortType} LIMIT $1 OFFSET $2`;
+exports.getTransaction = (id_user, keyword, sortType, limit, offset=0, cb) =>{
+    const q = `SELECT sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t INNER JOIN profiles p on p.id_user = t.sander_id WHERE t.sander_id = ${id_user} OR p.fullname LIKE '%${keyword}%' ORDER BY p.fullname ${sortType} LIMIT $1 OFFSET $2`;
     const val = [limit, offset];
     db.query(q, val, (err, res)=>{
         cb(err, res.rows);
@@ -180,14 +180,14 @@ exports.transfer = (sander_id, data, cb) => {
                     db.query(insertSender, insertSenderValues, (err, res) => {
                         if(err){
                             cb(err,res);
-                            console.log('err');
+                            console.log(err);
                         }else{
                             const insertRecip = 'UPDATE profiles SET balance = balance + $1 WHERE id_user = $2 RETURNING *';
-                            const insertRecipValues = [data.amount, res.rows[0].recipient_id];
+                            const insertRecipValues = [data.amount, data.recipient_id];
                             db.query(insertRecip, insertRecipValues, (err,res) =>{
                                 if (err) {
                                     cb(err,res);
-                                    console.log('err');
+                                    console.log(err);
                                 }else{
                                     cb(err,results);
                                     db.query('COMMIT', err => {
