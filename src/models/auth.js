@@ -48,14 +48,15 @@ exports.getAllUsers = (cb) =>{
     });
 };
 
-exports.getTransaction = (id_user, sortType, limit, offset=0, cb) =>{
-    db.query(`SELECT * FROM transaction WHERE sander_id = ${id_user} OR recipient_id = ${id_user} ORDER BY id_transaction ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
-        console.log(err);
+exports.getTransaction = (id_user, recipient_id, sortType, limit, offset=0, cb) =>{
+    const q = `SELECT sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t INNER JOIN profiles p on p.id_user = t.recipient_id WHERE t.sander_id = ${id_user} OR t.recipient_id = ${recipient_id} ORDER BY t.id_transaction ${sortType} LIMIT $1 OFFSET $2`;
+    const val = [limit, offset];
+    db.query(q, val, (err, res)=>{
         cb(err, res.rows);
     });
 };
 exports.getAllTransaction = (id_user ,cb) =>{
-    const q ='SELECT sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t inner join profiles p on p.id_user = t.recipient_id where sander_id = $1';
+    const q ='SELECT sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t INNER JOIN profiles p on p.id_user = t.recipient_id WHERE sander_id = $1';
     const val = [id_user];
     db.query(q, val, (err , res) =>{
         cb(err, res);
@@ -169,13 +170,13 @@ exports.transfer = (sander_id, data, cb) => {
         }else{
             const queryText = 'INSERT INTO transaction (time_transaction, recipient_id, sander_id, notes, amount, type_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
             const val = [data.time_transaction, data.recipient_id, sander_id, data.notes, data.amount, data.type_id];
-            db.query(queryText, val, (err, res) => {
-                cb(err,res);
+            db.query(queryText, val, (err, results) => {
                 if (err) {
+                    cb(err,results);
                     console.log(err);
                 }else{
                     const insertSender = 'UPDATE profiles SET balance = balance - $1 WHERE id_user = $2 RETURNING *';
-                    const insertSenderValues = [data.amount, res.rows[0].sander_id];
+                    const insertSenderValues = [data.amount, results.rows[0].sander_id];
                     db.query(insertSender, insertSenderValues, (err, res) => {
                         if(err){
                             cb(err,res);
@@ -188,7 +189,7 @@ exports.transfer = (sander_id, data, cb) => {
                                     cb(err,res);
                                     console.log('err');
                                 }else{
-                                    cb(err,res);
+                                    cb(err,results);
                                     db.query('COMMIT', err => {
                                         if (err) {
                                             console.error('Error committing transaction', err.stack);

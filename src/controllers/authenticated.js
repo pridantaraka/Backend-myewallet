@@ -43,9 +43,9 @@ exports.getAllTransaction = (req,res) =>{
 
 exports.getHistoryTransaction = (req,res) =>{
     const id = req.authUser.id_user;
-    const {sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const {recipient_id, sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
     const offset = (page-1)*limit;
-    regisModel.getTransaction(id, sortType, limit, offset, (err, results)=>{
+    regisModel.getTransaction(id, recipient_id, sortType, limit, offset, (err, results)=>{
         if (results.length < 1) {
             return res.redirect('/404');
         }
