@@ -21,14 +21,12 @@ exports.editProfile = [
     body('phonenumber')
         .isMobilePhone('id-ID').withMessage('Input your phone number correctly'),
     body('fullname')
-        .isString().withMessage('Name Must be Alphabet'),
-    body('balance')
-        .isNumeric().toInt().withMessage('input your money')
+        .isString().withMessage('Name Must be Alphabet')
 ];
 
 exports.topupRule=[
     body('balance')
-        .isLength({min:1}).isNumeric().toInt().withMessage('Input your money with number'),
+        .isLength({min:1}).isNumeric().toInt().withMessage('Input your Money with number'),
     body('type_id')
         .isLength({min:1}).isNumeric().toInt().withMessage('Must input 1 number'),
     body('time_transaction')
@@ -37,7 +35,7 @@ exports.topupRule=[
 
 exports.ruleTransfer = [
     body('amount')
-        .isLength({min:1}).isNumeric().toInt().withMessage('Input your money with number'),
+        .isLength({min:1}).isNumeric().toInt().withMessage('Input your Money with number'),
     body('type_id')
         .isLength({min:1}).isNumeric().toInt().withMessage('Must input 1 number'),
     body('time_transaction')

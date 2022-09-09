@@ -53,7 +53,6 @@ exports.createProfiles = (data, picture, cb)=>{
     
     const q = `INSERT INTO profiles (${strKey}) VALUES (${finalResult}) RETURNING *`;
     db.query(q, val, (err,res)=>{
-        console.log(err);
         if (res) {
             cb(err, res);
         }else{

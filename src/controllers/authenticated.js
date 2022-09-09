@@ -20,6 +20,27 @@ exports.getUserlogin = (req,res) =>{
 };
 //end
 
+exports.getAllUsers = (req,res) =>{
+    regisModel.getAllUsers((err,results)=>{
+        if(results.rows.length > 0){
+            return response(res, 'All User',results.rows);
+        }else{
+            return res.redirect('/404');
+        }
+    });
+};
+
+exports.getAllTransaction = (req,res) =>{
+    const id = req.authUser.id_user;
+    regisModel.getAllTransaction(id, (err,results)=>{
+        if(results.rows.length > 0){
+            return response(res, 'All Transaction',results.rows);
+        }else{
+            return res.redirect('/404');
+        }
+    });
+};
+
 exports.getHistoryTransaction = (req,res) =>{
     const id = req.authUser.id_user;
     const {sortType='ASC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
@@ -61,7 +82,7 @@ exports.topUp = (req, res) =>{
         if(err){
             return errorResponse(err,res);
         }
-        return response(res, 'UPDATE data success!', results.rows[0]);
+        return response(res, 'TOPUP success!', results.rows[0]);
     });
 };
 
@@ -74,7 +95,7 @@ exports.editUsersPin = (req, res) =>{
                 if(err){
                     return errorResponse(err,res);
                 }
-                return response(res, 'UPDATE data success!');   
+                return response(res, 'UPDATE pin success!');   
             });
         }else{
             return response(res, 'Your pin not match');
@@ -117,7 +138,7 @@ exports.transfer = (req, res) => {
                 if(err){
                     return errorResponse(err,res);
                 }
-                return response(res, 'UPDATE data success!', results.rows[0]);   
+                return response(res, 'TRANSFER success!', results.rows[0]);   
             });
         }else{
             return response(res, 'Your pin not match');

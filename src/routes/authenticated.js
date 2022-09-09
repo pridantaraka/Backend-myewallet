@@ -7,11 +7,14 @@ const authMw = require('../middleware/auth');
 const checkPwd =require('../middleware/pwdCheck');
 
 authenticated.get('/status', authMw, authenController.getUserlogin);
+authenticated.get('/getUsers', authenController.getAllUsers);
+authenticated.get('/getTransaction', authMw, authenController.getAllTransaction);
 authenticated.get('/history', authMw, authenController.getHistoryTransaction);
-authenticated.post('/transfer', ...rules.ruleTransfer, validation, authMw, authenController.transfer);
-authenticated.patch('/update', uploadProfile,...rules.editProfile, validation, authMw, authenController.editProfiles);
-authenticated.patch('/pin', ...rules.changePin, validation, authMw, authenController.editUsersPin);
-authenticated.patch('/pwd', checkPwd,...rules.changePwd, validation, authMw, authenController.editUserPwd);
-authenticated.patch('/topup', ...rules.topupRule,validation, authMw, authenController.topUp);
+authenticated.post('/transfer', authMw, ...rules.ruleTransfer, validation, authenController.transfer);
+authenticated.patch('/update', authMw, uploadProfile,...rules.editProfile, validation, authenController.editProfiles);
+authenticated.patch('/pin', authMw, ...rules.changePin, validation, authenController.editUsersPin);
+authenticated.patch('/pwd', authMw, checkPwd,...rules.changePwd, validation, authenController.editUserPwd);
+authenticated.patch('/topup', authMw,...rules.topupRule,validation, authenController.topUp);
+
 
 module.exports = authenticated;

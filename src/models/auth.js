@@ -33,7 +33,7 @@ exports.register = (data, cb) => {
 
 //start get Profile by id
 exports.getProfileid = (id_user, cb) =>{
-    const q = 'SELECT * FROM profiles WHERE id_user=$1';
+    const q = 'SELECT picture, fullname, phonenumber, email, username, balance FROM profiles p INNER JOIN users u on u.id_user = p.id_user WHERE p.id_user = $1';
     const val = [id_user];
     db.query(q, val,  (err, res)=>{
         cb(err, res);
@@ -41,10 +41,24 @@ exports.getProfileid = (id_user, cb) =>{
 };
 //end
 
+exports.getAllUsers = (cb) =>{
+    const q = 'SELECT fullname , phonenumber, email, username, balance FROM users u INNER JOIN profiles p on p.id_user = u.id_user';
+    db.query(q, (err, res)=>{
+        cb(err, res);
+    });
+};
+
 exports.getTransaction = (id_user, sortType, limit, offset=0, cb) =>{
     db.query(`SELECT * FROM transaction WHERE sander_id = ${id_user} OR recipient_id = ${id_user} ORDER BY id_transaction ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
         console.log(err);
         cb(err, res.rows);
+    });
+};
+exports.getAllTransaction = (id_user ,cb) =>{
+    const q ='SELECT sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t inner join profiles p on p.id_user = t.recipient_id where sander_id = $1';
+    const val = [id_user];
+    db.query(q, val, (err , res) =>{
+        cb(err, res);
     });
 };
 
@@ -87,19 +101,21 @@ exports.editProfiles = (id_user, picture, data, cb)=>{
 
 // topUp
 exports.updateBalance =(id_user,data,cb)=>{
+    console.log(typeof data.balance);
     db.query('BEGIN', err => {
         if(err){
             return err;
         }
         const balance = parseInt(data.balance);
+        
         const q ='UPDATE profiles SET balance=balance + $1 WHERE id_user=$2 RETURNING *';
         const val = [balance, id_user];
         db.query(q, val, (err,)=>{
             if(err){
                 return cb(err);
             }
-            const q ='INSERT INTO transaction (time_transaction, notes, recipient_id, sander_id, amount, type_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-            const val = [data.time_transaction, data.notes, data.recipient_id, data.sander_id, balance, data.type_id];
+            const q ='INSERT INTO transaction (time_transaction, notes, recipient_id, amount, type_id) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+            const val = [data.time_transaction, data.notes, data.recipient_id, balance, data.type_id];
             db.query(q, val, (err, res)=>{
                 if(err){
                     return cb(err);
@@ -151,7 +167,6 @@ exports.transfer = (sander_id, data, cb) => {
         if (err){
             console.log('err1');
         }else{
-            
             const queryText = 'INSERT INTO transaction (time_transaction, recipient_id, sander_id, notes, amount, type_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
             const val = [data.time_transaction, data.recipient_id, sander_id, data.notes, data.amount, data.type_id];
             db.query(queryText, val, (err, res) => {

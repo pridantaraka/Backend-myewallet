@@ -22,7 +22,7 @@ exports.countAllTransactions = (keyword, cb) => {
 //start get transaction by id
 exports.getTransbyId = (id_transaction, cb) =>{
     const q = 'SELECT * FROM transaction WHERE id_transaction=$1';
-    db.query(q, [id_transaction], (err, res)=>{r
+    db.query(q, [id_transaction], (err, res)=>{
         cb(err, res);
     });
 };
