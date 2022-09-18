@@ -3,12 +3,12 @@ require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 // const authMw = require('./src/middleware/auth');
-app.use(cors());
+
 
 global.__basepath = __dirname;
 
 const app = express();
-
+app.use(cors());
 app.use(express.urlencoded({extends: false}));
 app.use('/public', express.static('assets'));
 
