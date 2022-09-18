@@ -3,7 +3,7 @@ require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 // const authMw = require('./src/middleware/auth');
-
+app.use(cors());
 
 global.__basepath = __dirname;
 
@@ -19,7 +19,7 @@ app.get('/',(req, res)=>{
     });
 });
 
-app.use(cors());
+
  
 app.get('/', function (req, res) {
     res.json({msg: 'This is CORS-enabled for all origins!'});
