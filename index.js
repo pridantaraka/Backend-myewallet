@@ -9,6 +9,7 @@ global.__basepath = __dirname;
 
 const app = express();
 app.use(cors());
+app.options('*',cors());
 app.use(express.urlencoded({extends: false}));
 app.use('/public', express.static('assets'));
 

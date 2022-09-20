@@ -7,7 +7,7 @@ const authMw = require('../middleware/auth');
 const checkPwd =require('../middleware/pwdCheck');
 
 authenticated.get('/status', authMw, authenController.getUserlogin);
-authenticated.get('/getUsers', authenController.getAllUsers);
+authenticated.get('/getUsers', authMw,authenController.getAllUsers);
 authenticated.get('/getTransaction', authMw, authenController.getAllTransaction);
 authenticated.get('/history', authMw, authenController.getHistoryTransaction);
 authenticated.post('/transfer', authMw, ...rules.ruleTransfer, validation, authenController.transfer);

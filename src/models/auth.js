@@ -56,7 +56,7 @@ exports.getTransaction = (id_user, keyword, sortType, limit, offset=0, cb) =>{
     });
 };
 exports.getAllTransaction = (id_user ,cb) =>{
-    const q ='SELECT sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t INNER JOIN profiles p on p.id_user = t.recipient_id WHERE sander_id = $1';
+    const q ='SELECT id_transaction, sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t INNER JOIN profiles p on p.id_user = t.recipient_id WHERE sander_id = $1';
     const val = [id_user];
     db.query(q, val, (err , res) =>{
         cb(err, res);
