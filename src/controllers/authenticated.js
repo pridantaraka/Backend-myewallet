@@ -5,6 +5,7 @@ const regisModel = require('../models/auth');
 const errorResponse = require('../helpers/errorResponse');
 const userModels = require('../models/users');
 const bcrypt = require('bcrypt');
+// const { search } = require('../routes/authenticated');
 const {LIMIT_DATA} = process.env;
 
 //start profileDetail
@@ -21,12 +22,22 @@ exports.getUserlogin = (req,res) =>{
 //end
 
 exports.getAllUsers = (req,res) =>{
-    regisModel.getAllUsers((err,results)=>{
-        if(results.rows.length > 0){
-            return response(res, 'All User',results.rows);
-        }else{
+    const id = req.authUser.id_user;
+    const {search='', searchBy='username', sortType='ASC', orderBy='id_user', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const offset = (page-1)*limit;
+    regisModel.getAllUsers(id, search, sortType, orderBy, searchBy, limit, offset, (err, results)=>{
+        if (results.length < 1) {
             return res.redirect('/404');
         }
+        const pageInfo = {};
+        regisModel.countAllUsers(searchBy, search, (err, totalData)=>{
+            pageInfo.totalData = totalData;
+            pageInfo.totalPage = Math.ceil(totalData/limit);
+            pageInfo.currentPage = parseInt(page);
+            pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
+            pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
+            return response(res, 'List All Transaction', results, pageInfo);
+        });
     });
 };
 

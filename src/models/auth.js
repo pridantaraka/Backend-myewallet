@@ -1,5 +1,5 @@
 const db = require('../helpers/db');
-// const {LIMIT_DATA} = process.env;
+const { LIMIT_DATA } = process.env;
 
 exports.register = (data, cb) => {
     db.query('BEGIN', err => {
@@ -40,11 +40,22 @@ exports.getProfileid = (id_user, cb) =>{
     });
 };
 //end
-
-exports.getAllUsers = (cb) =>{
-    const q = 'SELECT fullname , phonenumber, email, username, balance FROM users u INNER JOIN profiles p on p.id_user = u.id_user';
-    db.query(q, (err, res)=>{
+exports.getAllUsers = (id_user, keyword, sortType, orderBy, searchBy, limit=Number(LIMIT_DATA), offset=0, cb) =>{
+    const q = `SELECT u.id_user, p.fullname , p.phonenumber, u.email, u.username, p.balance FROM users u INNER JOIN profiles p on p.id_user = u.id_user WHERE u.id_user != $3 AND ${searchBy} LIKE '%${keyword}%' ORDER BY ${orderBy} ${sortType} LIMIT $1 OFFSET $2`;
+    const val = [limit, offset, id_user];
+    db.query(q, val, (err, res)=>{
         cb(err, res);
+    });
+};
+
+exports.countAllUsers = (searchBy, keyword, cb)=> {
+    db.query(`SELECT * FROM users WHERE ${searchBy} LIKE '%${keyword}%'` , (err, res)=>{
+        console.log(res);
+        if(err){
+            console.log(err);
+        }
+        cb(err, res.rowCount);
+
     });
 };
 
