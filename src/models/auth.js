@@ -60,8 +60,14 @@ exports.countAllUsers = (searchBy, keyword, cb)=> {
 };
 
 exports.getTransaction = (id_user, keyword, sortType, limit, offset=0, cb) =>{
-    const q = `SELECT sander_id , recipient_id , time_transaction , fullname, phonenumber, picture , amount FROM transaction t INNER JOIN profiles p on p.id_user = t.sander_id WHERE t.sander_id = ${id_user} OR p.fullname LIKE '%${keyword}%' ORDER BY p.fullname ${sortType} LIMIT $1 OFFSET $2`;
-    const val = [limit, offset];
+    const q = `SELECT t.id_transaction, t.sander_id, t.recipient_id, t.time_transaction, t.amount, t.notes, 
+    p1.fullname recipient_fullname, p2.fullname sender_fullname, p1.phonenumber recipient_phonenumber, p2.phonenumber sender_phonenumber, p1.picture recipient_picture, p2.picture sender_picture, tr1.name FROM transaction t 
+    INNER JOIN profiles p1 on p1.id_user = t.recipient_id 
+    INNER JOIN profiles p2 on p2.id_user = t.sander_id 
+    INNER JOIN type_transaction tr1 on tr1.tpye_id = t.type_id
+    WHERE t.sander_id = $1 OR p1.fullname 
+    LIKE '%${keyword}%' ORDER BY p1.fullname ${sortType} LIMIT $2 OFFSET $3`;
+    const val = [id_user, limit, offset];
     db.query(q, val, (err, res)=>{
         cb(err, res.rows);
     });
@@ -76,7 +82,6 @@ exports.getAllTransaction = (id_user ,cb) =>{
 
 exports.countTransaction = (id_user, cb) => {
     db.query(`SELECT * FROM transaction WHERE sander_id = ${id_user} OR recipient_id = ${id_user}`, (err, res)=>{
-        console.log(err);
         cb(err, res.rowCount);
     });
 };
