@@ -54,7 +54,7 @@ exports.getAllTransaction = (req,res) =>{
 
 exports.getHistoryTransaction = (req,res) =>{
     const id = req.authUser.id_user;
-    const {keyword, sortType='', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const {keyword, sortType='DESC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
     const offset = (page-1)*limit;
     regisModel.getTransaction(id, keyword, sortType, limit, offset, (err, results)=>{
         if (results.length < 1) {

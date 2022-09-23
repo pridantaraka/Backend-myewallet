@@ -66,7 +66,7 @@ exports.getTransaction = (id_user, keyword, sortType, limit, offset=0, cb) =>{
     INNER JOIN profiles p2 on p2.id_user = t.sander_id 
     INNER JOIN type_transaction tr1 on tr1.tpye_id = t.type_id
     WHERE t.sander_id = $1 OR p1.fullname 
-    LIKE '%${keyword}%' ORDER BY p1.fullname ${sortType} LIMIT $2 OFFSET $3`;
+    LIKE '%${keyword}%' ORDER BY t.id_transaction ${sortType} LIMIT $2 OFFSET $3`;
     const val = [id_user, limit, offset];
     db.query(q, val, (err, res)=>{
         cb(err, res.rows);
