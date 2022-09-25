@@ -41,7 +41,7 @@ exports.getProfileid = (id_user, cb) =>{
 };
 //end
 exports.getAllUsers = (id_user, keyword, sortType, orderBy, searchBy, limit=Number(LIMIT_DATA), offset=0, cb) =>{
-    const q = `SELECT u.id_user, p.fullname , p.phonenumber, u.email, u.username, p.balance FROM users u INNER JOIN profiles p on p.id_user = u.id_user WHERE u.id_user != $3 AND ${searchBy} LIKE '%${keyword}%' ORDER BY ${orderBy} ${sortType} LIMIT $1 OFFSET $2`;
+    const q = `SELECT u.id_user, p.picture, p.fullname , p.phonenumber, u.email, u.username, p.balance FROM users u INNER JOIN profiles p on p.id_user = u.id_user WHERE u.id_user != $3 AND ${searchBy} LIKE '%${keyword}%' ORDER BY ${orderBy} ${sortType} LIMIT $1 OFFSET $2`;
     const val = [limit, offset, id_user];
     db.query(q, val, (err, res)=>{
         cb(err, res);
