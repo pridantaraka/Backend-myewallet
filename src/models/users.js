@@ -1,9 +1,9 @@
 const db = require('../helpers/db');
 
-const {LIMIT_DATA} = process.env;
+// const {LIMIT_DATA} = process.env;
 
 //start getalluser
-exports.getAllUsers = (searchBy, keyword, sortType, limit=parseInt(LIMIT_DATA), offset=0, cb) =>{
+exports.getAllUsers = (searchBy, keyword, sortType, limit, offset=0, cb) =>{
     db.query(`SELECT * FROM users WHERE ${searchBy} LIKE '%${keyword}%' ORDER BY id_user ${sortType} LIMIT $1 OFFSET $2`, [limit, offset], (err, res)=>{
         cb(err, res.rows);
     });

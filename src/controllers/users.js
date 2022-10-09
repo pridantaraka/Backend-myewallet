@@ -16,6 +16,7 @@ exports.getAllUsers = (req, res)=>{
             pageInfo.totalData = totalData;
             pageInfo.totalPage = Math.ceil(totalData/limit);
             pageInfo.currentPage = parseInt(page);
+            pageInfo.limit=limit;
             pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
             pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
             return response(res, 'List All User', results, pageInfo);
