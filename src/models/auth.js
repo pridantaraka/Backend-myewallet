@@ -1,5 +1,4 @@
 const db = require('../helpers/db');
-const { LIMIT_DATA } = process.env;
 
 exports.register = (data, cb) => {
     db.query('BEGIN', err => {
@@ -40,16 +39,24 @@ exports.getProfileid = (id_user, cb) =>{
     });
 };
 //end
-exports.getAllUsers = (id_user, keyword, sortType, orderBy, searchBy, limit=Number(LIMIT_DATA), offset=0, cb) =>{
-    const q = `SELECT u.id_user, p.picture, p.fullname , p.phonenumber, u.email, u.username, p.balance FROM users u INNER JOIN profiles p on p.id_user = u.id_user WHERE u.id_user != $3 AND ${searchBy} LIKE '%${keyword}%' ORDER BY ${orderBy} ${sortType} LIMIT $1 OFFSET $2`;
+exports.getAllUsers = (id_user, searchBy, keyword, sortType, orderBy, limit, offset, cb) =>{
+    const q = `SELECT u.id_user, p.picture, p.fullname , p.phonenumber, u.email, u.username, p.balance FROM users u INNER JOIN profiles p on p.id_user = u.id_user WHERE u.id_user != $3 AND p.${searchBy} LIKE '%${keyword}%' ORDER BY ${orderBy} ${sortType} LIMIT $1 OFFSET $2`;
     const val = [limit, offset, id_user];
     db.query(q, val, (err, res)=>{
         cb(err, res);
     });
 };
 
+exports.getUserId = (id, cb) => {
+    const q = 'SELECT u.id_user, p.picture, p.fullname, p.phonenumber FROM users u INNER JOIN profiles p on p.id_user = u.id_user WHERE u.id_user = $1';
+    const val = [id];
+    db.query(q,val, (err,res)=>{
+        cb(err,res);
+    });
+};
+
 exports.countAllUsers = (searchBy, keyword, cb)=> {
-    db.query(`SELECT * FROM users WHERE ${searchBy} LIKE '%${keyword}%'` , (err, res)=>{
+    db.query(`SELECT * FROM users u INNER JOIN profiles p ON p.id_user = u.id_user WHERE p.${searchBy} LIKE '%${keyword}%'` , (err, res)=>{
         console.log(res);
         if(err){
             console.log(err);
@@ -59,7 +66,7 @@ exports.countAllUsers = (searchBy, keyword, cb)=> {
     });
 };
 
-exports.getTransaction = (id_user, keyword, sortType, limit, offset=0, cb) =>{
+exports.getTransaction = (id_user, keyword, sortType, limit, offset, cb) =>{
     const q = `SELECT t.id_transaction, t.sander_id, t.recipient_id, t.time_transaction, t.amount, t.notes, 
     p1.fullname recipient_fullname, p2.fullname sender_fullname, p1.phonenumber recipient_phonenumber, p2.phonenumber sender_phonenumber, p1.picture recipient_picture, p2.picture sender_picture, tr1.name FROM transaction t 
     INNER JOIN profiles p1 on p1.id_user = t.recipient_id 

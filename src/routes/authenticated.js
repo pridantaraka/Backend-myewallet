@@ -10,6 +10,7 @@ authenticated.get('/status', authMw, authenController.getUserlogin);
 authenticated.get('/getUsers', authMw,authenController.getAllUsers);
 authenticated.get('/getTransaction', authMw, authenController.getAllTransaction);
 authenticated.get('/history', authMw, authenController.getHistoryTransaction);
+authenticated.get('/getUserId/:id', authMw, authenController.getUserId);
 authenticated.post('/transfer', authMw, ...rules.ruleTransfer, validation, authenController.transfer);
 authenticated.patch('/update', authMw, uploadProfile,...rules.editProfile, validation, authenController.editProfiles);
 authenticated.patch('/pin', authMw, ...rules.changePin, validation, authenController.editUsersPin);

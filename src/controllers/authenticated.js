@@ -21,11 +21,22 @@ exports.getUserlogin = (req,res) =>{
 };
 //end
 
+exports.getUserId = (req, res)=>{
+    const {id} = req.params;
+    regisModel.getUserId(id, (err,results)=>{
+        if(results.rows.length > 0){
+            return response(res, 'Data User', results.rows[0]);
+        }else{
+            return res.redirect('/404');
+        }
+    });
+};
+
 exports.getAllUsers = (req,res) =>{
     const id = req.authUser.id_user;
-    const {search='', searchBy='username', sortType='ASC', orderBy='id_user', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const {searchBy='fullname', search='', sortType='ASC', orderBy='id_user', limit=parseInt(LIMIT_DATA), page=1} = req.query;
     const offset = (page-1)*limit;
-    regisModel.getAllUsers(id, search, sortType, orderBy, searchBy, limit, offset, (err, results)=>{
+    regisModel.getAllUsers(id, searchBy, search, sortType, orderBy, limit, offset, (err, results)=>{
         if (results.length < 1) {
             return res.redirect('/404');
         }
@@ -34,9 +45,10 @@ exports.getAllUsers = (req,res) =>{
             pageInfo.totalData = totalData;
             pageInfo.totalPage = Math.ceil(totalData/limit);
             pageInfo.currentPage = parseInt(page);
+            pageInfo.limit = parseInt(limit);
             pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
             pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
-            return response(res, 'List All Transaction', results, pageInfo);
+            return response(res, 'List All Transaction', results.rows, pageInfo);
         });
     });
 };
@@ -54,7 +66,7 @@ exports.getAllTransaction = (req,res) =>{
 
 exports.getHistoryTransaction = (req,res) =>{
     const id = req.authUser.id_user;
-    const {keyword, sortType='DESC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
+    const {keyword='', sortType='DESC', limit=parseInt(LIMIT_DATA), page=1} = req.query;
     const offset = (page-1)*limit;
     regisModel.getTransaction(id, keyword, sortType, limit, offset, (err, results)=>{
         if (results.length < 1) {
@@ -65,6 +77,7 @@ exports.getHistoryTransaction = (req,res) =>{
             pageInfo.totalData = totalData;
             pageInfo.totalPage = Math.ceil(totalData/limit);
             pageInfo.currentPage = parseInt(page);
+            pageInfo.limit = parseInt(limit);
             pageInfo.nextPage = pageInfo.currentPage < pageInfo.totalPage ? pageInfo.currentPage + 1 : null;
             pageInfo.provPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
             return response(res, 'List All Transaction', results, pageInfo);
