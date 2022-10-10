@@ -44,11 +44,12 @@ exports.login = (req,res) =>{
             return response(res, 'User not Found', null, null, 400);
         }
         const user = results.rows[0];
+        const pin = user.pin;
         bcrypt.compare(password, user.password)
             .then((cpRes)=>{
                 const token = jwt.sign({id_user: user.id_user}, process.env.APP_SECRET||'secretKey');
                 if (cpRes) {
-                    return response(res, 'Login success', {token});
+                    return response(res, 'Login success', {token,pin});
                 }
                 return response(res, 'Email or password not match',null, null, 400);
             })
