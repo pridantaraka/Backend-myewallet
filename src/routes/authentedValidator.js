@@ -29,8 +29,6 @@ exports.topupRule=[
         .isLength({min:1}).isNumeric().toInt().withMessage('Input your Money with number'),
     body('type_id')
         .isLength({min:1}).isNumeric().toInt().withMessage('Must input 1 number'),
-    body('time_transaction')
-        .isISO8601().withMessage('Must input Date (ISO8601)')
 ];
 
 exports.ruleTransfer = [
