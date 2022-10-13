@@ -162,7 +162,7 @@ exports.transfer = (req, res) => {
                 if(err){
                     return errorResponse(err,res);
                 }
-                return response(res, 'TRANSFER success!', results.rows[0]);   
+                return response(res, 'TRANSFER success!', results.rows[0],null);   
             });
         }else{
             return response(res, 'Your pin not match');
