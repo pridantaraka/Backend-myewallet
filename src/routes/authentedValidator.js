@@ -19,7 +19,7 @@ exports.changePwd =[
 
 exports.editProfile = [
     body('phonenumber')
-        .isMobilePhone('id-ID').withMessage('Input your phone number correctly'),
+        .isMobilePhone('id-ID').withMessage('Input your phone number correctly with ID number'),
     body('fullname')
         .isString().withMessage('Name Must be Alphabet')
 ];
