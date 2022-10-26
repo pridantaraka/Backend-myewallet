@@ -3,20 +3,7 @@
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinaryUpload = require('./cloudinary');
-// const {SIZE_IMG_LIMIT} = process.env;
-// const filesize = Number(SIZE_IMG_LIMIT);
 
-
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb)=>{
-//         cb(null, path.join(global.__basepath, 'assets', 'upload'));
-//     },
-//     filename: (req, file, cb)=>{
-//         const timestamp = new Date().getTime();
-//         const ext = file.mimetype.split('/')[1];
-//         cb(null, `${timestamp}.${ext}`);
-//     }
-// });
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinaryUpload,

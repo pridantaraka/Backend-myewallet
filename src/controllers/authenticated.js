@@ -90,8 +90,9 @@ exports.editProfiles = (req, res) =>{
     const id = req.authUser.id_user;
     let filename = null;
     if(req.file){
-        filename = req.file.filename;
+        filename = req.file.path;
     }
+    console.log(filename, 'filename');
     regisModel.editProfiles(id, filename, req.body, (err, results)=>{
         if(err){
             return errorResponse(err,res);
