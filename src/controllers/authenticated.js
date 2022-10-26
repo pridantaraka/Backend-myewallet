@@ -92,7 +92,6 @@ exports.editProfiles = (req, res) =>{
     if(req.file){
         filename = req.file.path;
     }
-    console.log(filename, 'filename');
     regisModel.editProfiles(id, filename, req.body, (err, results)=>{
         if(err){
             return errorResponse(err,res);
