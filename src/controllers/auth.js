@@ -21,7 +21,7 @@ exports.createPin = (req, res) => {
         if(result.rows.length > 0){
             const user = result.rows[0];
             if(user.pin === null){
-                userModels.updateUsersPin(user.email, {pin: req.body.pin}, (err, resultsUpdate)=>{
+                userModels.updateUsersPin(user.id_user, {pin: req.body.pin}, (err, resultsUpdate)=>{
                     console.log(err);
                     const userUpdated = resultsUpdate.rows[0];
                     if(userUpdated.email === user.email){
