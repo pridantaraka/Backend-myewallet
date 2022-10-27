@@ -51,8 +51,8 @@ exports.createUsers = (data, cb)=>{
 //end
 
 //start updateuserPin
-exports.updateUsersPin = (id_user,data,cb)=>{
-    let val = [id_user];
+exports.updateUsersPin = (email, data,cb)=>{
+    let val = [email];
 
     const filtered = {};
     const obj = {
@@ -75,7 +75,7 @@ exports.updateUsersPin = (id_user,data,cb)=>{
     const key = Object.keys(filtered);
     const finalResult = key.map((o, ind) => `${o}=$${ind+2}`);
 
-    const q = `UPDATE users SET ${finalResult} WHERE id_user=$1 RETURNING *`;
+    const q = `UPDATE users SET ${finalResult} WHERE email=$1 RETURNING *`;
     db.query(q, val, (err,res)=>{
         if(res){
             cb(err, res);
