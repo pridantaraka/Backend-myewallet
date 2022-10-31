@@ -138,8 +138,9 @@ exports.updateBalance =(id_user,data,cb)=>{
             if(err){
                 return cb(err);
             }
-            const q ='INSERT INTO transaction (time_transaction, notes, recipient_id, amount, type_id) VALUES ($1, $2, $3, $4, $5) RETURNING *';
-            const val = [data.time_transaction, data.notes, data.recipient_id, balance, data.type_id];
+            const q ='INSERT INTO transaction (time_transaction, notes,  sander_id, recipient_id, amount, type_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+            const val = [data.time_transaction, data.notes, data.sander_id=id_user, data.recipient_id=id_user, balance, data.type_id];
+            console.log(val);
             db.query(q, val, (err, res)=>{
                 if(err){
                     return cb(err);
