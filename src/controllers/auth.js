@@ -9,20 +9,21 @@ exports.register = (req, res) => {
     req.body.pin = null;
     regisModel.register(req.body, (err) => {
         if(err){  
-            return errorResponse(err,res);
+            return errorResponse(res,'Email Already set');
         }
-        return response(res, 'Register successfully', );
+        return response(res, 'Register successfully');
     });
 };
 
 exports.createPin = (req, res) => {
     const {email} = req.body;
+    console.log('test');
     userModels.getUserbyemail(email, (err, result) => {
         if(result.rows.length > 0){
             const user = result.rows[0];
             if(user.pin === null){
                 userModels.updateUsersPin(user.id_user, {pin: req.body.pin}, (err, resultsUpdate)=>{
-                    console.log(err);
+                    console.log(req.body.pin, ' ini pin');
                     const userUpdated = resultsUpdate.rows[0];
                     if(userUpdated.email === user.email){
                         return response(res, 'Create Pin Success');

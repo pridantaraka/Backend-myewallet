@@ -5,8 +5,9 @@ exports.register = (data, cb) => {
         if (err){
             console.log('err1');
         }else{
-            const queryText = 'INSERT INTO users(email, password, username) VALUES($1, $2, $3) RETURNING id_user';
-            db.query(queryText, [data.email, data.password, data.username], (err, res) => {
+            const queryText = 'INSERT INTO users(email, password, username, pin) VALUES($1, $2, $3, $4) RETURNING id_user';
+            db.query(queryText, [data.email, data.password, data.username, data.pin=123123], (err, res) => {
+                console.log(data);  
                 if (err) {
                     console.log(err);
                 }else{
@@ -19,7 +20,7 @@ exports.register = (data, cb) => {
                             cb(err,res);
                             db.query('COMMIT', err => {
                                 if (err) {
-                                    console.error('Error committing transaction', err.stack);
+                                    console.error('Error committing Register', err.stack);
                                 }
                             });
                         }

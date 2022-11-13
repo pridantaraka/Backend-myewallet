@@ -77,6 +77,8 @@ exports.updateUsersPin = (id_user,data,cb)=>{
 
     const q = `UPDATE users SET ${finalResult} WHERE id_user=$1 RETURNING *`;
     db.query(q, val, (err,res)=>{
+        console.log('dari query', res);
+        console.log('ini error query', err);
         if(res){
             cb(err, res);
         }else{
