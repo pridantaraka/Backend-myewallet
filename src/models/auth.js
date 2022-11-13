@@ -7,7 +7,6 @@ exports.register = (data, cb) => {
         }else{
             const queryText = 'INSERT INTO users(email, password, username, pin) VALUES($1, $2, $3, $4) RETURNING id_user';
             db.query(queryText, [data.email, data.password, data.username, data.pin=123123], (err, res) => {
-                console.log(data);  
                 if (err) {
                     console.log(err);
                 }else{
